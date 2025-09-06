@@ -1,8 +1,3 @@
-# ai-experiments
-Repository to experiment with coding using LLMs
-
-## llm-invocation/invoke_llm.py
-
 Usage: python invoke_llm.py
 
 A simple Python program to invoke OpenAI's free LLM (using the OpenAI API) and provide a response to user input.
@@ -27,4 +22,4 @@ Welcome to the OpenAI LLM chatbot! Type 'exit' to quit.
 You: Hello
 LLM: Hi! How can I assist you today?
 You: exit
-Goodbye
+Goodbye!
