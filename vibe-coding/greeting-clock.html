@@ -30,19 +30,24 @@
             transition: background 1s;
         }
         .greeting {
-            font-size: 2.5rem;
+            font-size: 5rem;
             margin-bottom: 2rem;
             color: #333;
             text-shadow: 0 2px 8px rgba(255,255,255,0.7);
         }
-        .timezone-select {
+        .controls-row {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 1.5rem;
             margin-bottom: 2rem;
+        }
+        .timezone-select {
             font-size: 1rem;
             padding: 0.5rem;
         }
         .clock {
-            position: fixed;
-            bottom: 2rem;
+            position: static;
             font-size: 1.2rem;
             color: #555;
             background: #fff;
@@ -57,109 +62,137 @@
 <body>
         <div class="background" id="background"></div>
         <div class="greeting" id="greeting"></div>
-        <select class="timezone-select" id="timezone-select"></select>
-        <div class="clock" id="clock"></div>
+        <div class="controls-row">
+                <select class="timezone-select" id="timezone-select"></select>
+                <div class="clock" id="clock"></div>
+        </div>
         <!-- Bird chirping sound, only played in the morning -->
         <audio id="bird-audio" src="https://cdn.pixabay.com/audio/2022/07/26/audio_124bfae5c7.mp3" preload="auto"></audio>
         <script>
-                function getGreeting(hour) {
-                        if (hour < 12) return 'Good morning';
-                        if (hour < 18) return 'Good afternoon';
-                        return 'Good evening';
+        function getGreeting(hour) {
+                if (hour < 12) return 'Good morning';
+                if (hour < 18) return 'Good afternoon';
+                return 'Good evening';
+        }
+
+        function getBackgroundSVG(hour) {
+                if (hour < 12) {
+                        // Morning: sun, landscape, birds
+                        return `
+                        <svg width="100vw" height="100vh" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="#aee9ff"/>
+                                    <stop offset="100%" stop-color="#f7e9b5"/>
+                                </linearGradient>
+                            </defs>
+                            <rect width="800" height="600" fill="url(#sky)"/>
+                            <circle cx="650" cy="120" r="60" fill="#fffbe6" stroke="#ffe066" stroke-width="8"/>
+                            <ellipse cx="400" cy="580" rx="400" ry="60" fill="#7ec850"/>
+                            <ellipse cx="200" cy="570" rx="120" ry="30" fill="#6bbf59"/>
+                            <ellipse cx="600" cy="570" rx="100" ry="25" fill="#6bbf59"/>
+                            <!-- Birds -->
+                            <path d="M120 200 Q130 190 140 200" stroke="#444" stroke-width="2" fill="none"/>
+                            <path d="M160 220 Q170 210 180 220" stroke="#444" stroke-width="2" fill="none"/>
+                            <path d="M200 180 Q210 170 220 180" stroke="#444" stroke-width="2" fill="none"/>
+                        </svg>
+                        `;
+                } else if (hour < 18) {
+                        // Afternoon: bright sun, blue sky
+                        return `
+                        <svg width="100vw" height="100vh" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="sky2" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="#7fd3fa"/>
+                                    <stop offset="100%" stop-color="#e6f7ff"/>
+                                </linearGradient>
+                            </defs>
+                            <rect width="800" height="600" fill="url(#sky2)"/>
+                            <circle cx="700" cy="100" r="70" fill="#fff700" stroke="#ffe066" stroke-width="10"/>
+                            <ellipse cx="400" cy="580" rx="400" ry="60" fill="#b2e672"/>
+                            <ellipse cx="600" cy="570" rx="120" ry="30" fill="#8fd14f"/>
+                            <ellipse cx="200" cy="570" rx="100" ry="25" fill="#8fd14f"/>
+                        </svg>
+                        `;
+                } else {
+                        // Evening: moon, stars, dark sky
+                        return `
+                        <svg width="100vw" height="100vh" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="night" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="#232b4d"/>
+                                    <stop offset="100%" stop-color="#1a1a2e"/>
+                                </linearGradient>
+                            </defs>
+                            <rect width="800" height="600" fill="url(#night)"/>
+                            <circle cx="120" cy="120" r="60" fill="#f7f7f7" opacity="0.8"/>
+                            <circle cx="140" cy="110" r="50" fill="#232b4d" opacity="0.7"/>
+                            <!-- Stars -->
+                            <circle cx="700" cy="80" r="2" fill="#fff"/>
+                            <circle cx="600" cy="150" r="1.5" fill="#fff"/>
+                            <circle cx="500" cy="100" r="2.5" fill="#fff"/>
+                            <circle cx="300" cy="60" r="1.2" fill="#fff"/>
+                            <circle cx="400" cy="200" r="1.8" fill="#fff"/>
+                            <circle cx="750" cy="300" r="1.5" fill="#fff"/>
+                            <ellipse cx="400" cy="580" rx="400" ry="60" fill="#232b4d"/>
+                        </svg>
+                        `;
                 }
+        }
 
-                function getBackgroundSVG(hour) {
-                        if (hour < 12) {
-                                // Morning: sun, landscape, birds
-                                return `
-                                <svg width="100vw" height="100vh" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
-                                    <defs>
-                                        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="0%" stop-color="#aee9ff"/>
-                                            <stop offset="100%" stop-color="#f7e9b5"/>
-                                        </linearGradient>
-                                    </defs>
-                                    <rect width="800" height="600" fill="url(#sky)"/>
-                                    <circle cx="650" cy="120" r="60" fill="#fffbe6" stroke="#ffe066" stroke-width="8"/>
-                                    <ellipse cx="400" cy="580" rx="400" ry="60" fill="#7ec850"/>
-                                    <ellipse cx="200" cy="570" rx="120" ry="30" fill="#6bbf59"/>
-                                    <ellipse cx="600" cy="570" rx="100" ry="25" fill="#6bbf59"/>
-                                    <!-- Birds -->
-                                    <path d="M120 200 Q130 190 140 200" stroke="#444" stroke-width="2" fill="none"/>
-                                    <path d="M160 220 Q170 210 180 220" stroke="#444" stroke-width="2" fill="none"/>
-                                    <path d="M200 180 Q210 170 220 180" stroke="#444" stroke-width="2" fill="none"/>
-                                </svg>
-                                `;
-                        } else if (hour < 18) {
-                                // Afternoon: bright sun, blue sky
-                                return `
-                                <svg width="100vw" height="100vh" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
-                                    <defs>
-                                        <linearGradient id="sky2" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="0%" stop-color="#7fd3fa"/>
-                                            <stop offset="100%" stop-color="#e6f7ff"/>
-                                        </linearGradient>
-                                    </defs>
-                                    <rect width="800" height="600" fill="url(#sky2)"/>
-                                    <circle cx="700" cy="100" r="70" fill="#fff700" stroke="#ffe066" stroke-width="10"/>
-                                    <ellipse cx="400" cy="580" rx="400" ry="60" fill="#b2e672"/>
-                                    <ellipse cx="600" cy="570" rx="120" ry="30" fill="#8fd14f"/>
-                                    <ellipse cx="200" cy="570" rx="100" ry="25" fill="#8fd14f"/>
-                                </svg>
-                                `;
-                        } else {
-                                // Evening: moon, stars, dark sky
-                                return `
-                                <svg width="100vw" height="100vh" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
-                                    <defs>
-                                        <linearGradient id="night" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="0%" stop-color="#232b4d"/>
-                                            <stop offset="100%" stop-color="#1a1a2e"/>
-                                        </linearGradient>
-                                    </defs>
-                                    <rect width="800" height="600" fill="url(#night)"/>
-                                    <circle cx="120" cy="120" r="60" fill="#f7f7f7" opacity="0.8"/>
-                                    <circle cx="140" cy="110" r="50" fill="#232b4d" opacity="0.7"/>
-                                    <!-- Stars -->
-                                    <circle cx="700" cy="80" r="2" fill="#fff"/>
-                                    <circle cx="600" cy="150" r="1.5" fill="#fff"/>
-                                    <circle cx="500" cy="100" r="2.5" fill="#fff"/>
-                                    <circle cx="300" cy="60" r="1.2" fill="#fff"/>
-                                    <circle cx="400" cy="200" r="1.8" fill="#fff"/>
-                                    <circle cx="750" cy="300" r="1.5" fill="#fff"/>
-                                    <ellipse cx="400" cy="580" rx="400" ry="60" fill="#232b4d"/>
-                                </svg>
-                                `;
-                        }
-                }
+        let lastHour = null;
+        let birdAudioPlayed = false;
+        function updateGreetingAndClock() {
+                const tz = timezoneSelect.value;
+                const now = new Date(new Date().toLocaleString('en-US', { timeZone: tz }));
+                const hour = now.getHours();
+                const greeting = getGreeting(hour);
+                greetingDiv.textContent = greeting;
+                clockDiv.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' (' + tz + ')';
+                // Update background
+                backgroundDiv.innerHTML = getBackgroundSVG(hour);
 
-                let lastHour = null;
-                let birdAudioPlayed = false;
-                function updateGreetingAndClock() {
-                    const tz = timezoneSelect.value;
-                    const now = new Date(new Date().toLocaleString('en-US', { timeZone: tz }));
-                    const hour = now.getHours();
-                    const greeting = getGreeting(hour);
-                    greetingDiv.textContent = greeting;
-                    clockDiv.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' (' + tz + ')';
-                    // Update background
-                    backgroundDiv.innerHTML = getBackgroundSVG(hour);
-
-                    // Bird chirping sound in the morning (6am-12pm)
-                    const birdAudio = document.getElementById('bird-audio');
-                    if (hour >= 6 && hour < 12) {
+                // Bird chirping sound in the morning (6am-12pm)
+                const birdAudio = document.getElementById('bird-audio');
+                if (hour >= 6 && hour < 12) {
                         if (!birdAudioPlayed || lastHour === null || hour !== lastHour) {
-                            birdAudio.currentTime = 0;
-                            birdAudio.play().catch(()=>{});
-                            birdAudioPlayed = true;
+                                birdAudio.currentTime = 0;
+                                birdAudio.play().catch(()=>{});
+                                birdAudioPlayed = true;
                         }
-                    } else {
+                } else {
                         birdAudio.pause();
                         birdAudio.currentTime = 0;
                         birdAudioPlayed = false;
-                    }
-                    lastHour = hour;
                 }
+                lastHour = hour;
+        }
+
+        // Populate timezone select
+        function populateTimezones() {
+                const timezones = Intl.supportedValuesOf ? Intl.supportedValuesOf('timeZone') : [
+                        'UTC','America/New_York','Europe/London','Asia/Kolkata','Asia/Tokyo','Australia/Sydney'
+                ];
+                timezones.forEach(tz => {
+                        const option = document.createElement('option');
+                        option.value = tz;
+                        option.textContent = tz;
+                        timezoneSelect.appendChild(option);
+                });
+                // Set default to browser timezone
+                timezoneSelect.value = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        }
+
+        const greetingDiv = document.getElementById('greeting');
+        const clockDiv = document.getElementById('clock');
+        const timezoneSelect = document.getElementById('timezone-select');
+        const backgroundDiv = document.getElementById('background');
+
+        populateTimezones();
+        updateGreetingAndClock();
+        setInterval(updateGreetingAndClock, 1000);
+        timezoneSelect.addEventListener('change', updateGreetingAndClock);
+        </script>
 
                 // Populate timezone select
                 function populateTimezones() {
