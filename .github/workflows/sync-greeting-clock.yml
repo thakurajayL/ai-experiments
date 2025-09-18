@@ -1,0 +1,27 @@
+name: Sync Greeting Clock to Docs
+
+on:
+  push:
+    paths:
+      - 'vibe-coding/greeting-clock.html'
+    branches:
+      - main
+
+jobs:
+  copy-to-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Copy greeting-clock.html to docs
+        run: |
+          mkdir -p docs
+          cp vibe-coding/greeting-clock.html docs/greeting-clock.html
+      - name: Commit and create PR
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: 'Sync greeting-clock.html from vibe-coding to docs'
+          title: 'Sync greeting-clock.html to docs directory'
+          body: 'Automated PR: Copy updated greeting-clock.html from vibe-coding to docs.'
+          branch: sync-greeting-clock-to-docs
+          delete-branch: true
