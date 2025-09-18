@@ -194,30 +194,5 @@
         timezoneSelect.addEventListener('change', updateGreetingAndClock);
         </script>
 
-                // Populate timezone select
-                function populateTimezones() {
-                        const timezones = Intl.supportedValuesOf ? Intl.supportedValuesOf('timeZone') : [
-                                'UTC','America/New_York','Europe/London','Asia/Kolkata','Asia/Tokyo','Australia/Sydney'
-                        ];
-                        timezones.forEach(tz => {
-                                const option = document.createElement('option');
-                                option.value = tz;
-                                option.textContent = tz;
-                                timezoneSelect.appendChild(option);
-                        });
-                        // Set default to browser timezone
-                        timezoneSelect.value = Intl.DateTimeFormat().resolvedOptions().timeZone;
-                }
-
-                const greetingDiv = document.getElementById('greeting');
-                const clockDiv = document.getElementById('clock');
-                const timezoneSelect = document.getElementById('timezone-select');
-                const backgroundDiv = document.getElementById('background');
-
-                populateTimezones();
-                updateGreetingAndClock();
-                setInterval(updateGreetingAndClock, 1000);
-                timezoneSelect.addEventListener('change', updateGreetingAndClock);
-        </script>
 </body>
 </html>
