@@ -12,7 +12,7 @@ The final HTML file has been moved to the top-level `docs` folder for GitHub Pag
 - [docs/greeting-clock.html](../docs/greeting-clock.html)
 
 👉 **Or open it directly in your browser via GitHub Pages:**
-- https://thakurajayL.github.io/ai-experiments/docs/greeting-clock.html
+- https://thakurajayL.github.io/ai-experiments/greeting-clock.html
 
 You can open the above file in your browser or visit the GitHub Pages site if enabled.
 
