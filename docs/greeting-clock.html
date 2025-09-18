@@ -63,9 +63,10 @@
         <div class="background" id="background"></div>
         <div class="greeting" id="greeting"></div>
         <div class="controls-row">
-                <select class="timezone-select" id="timezone-select"></select>
-                <div class="clock" id="clock"></div>
+            <select class="timezone-select" id="timezone-select"></select>
+            <div class="clock" id="clock"></div>
         </div>
+        <button id="start-sound" style="font-size:1.1rem;padding:0.5rem 1.2rem;margin-bottom:1.5rem;cursor:pointer;">Start with Sound</button>
         <!-- Bird chirping sound, only played in the morning -->
         <audio id="bird-audio" src="https://cdn.pixabay.com/audio/2022/07/26/audio_124bfae5c7.mp3" preload="auto"></audio>
         <script>
@@ -142,30 +143,31 @@
 
         let lastHour = null;
         let birdAudioPlayed = false;
+        let soundEnabled = false;
         function updateGreetingAndClock() {
-                const tz = timezoneSelect.value;
-                const now = new Date(new Date().toLocaleString('en-US', { timeZone: tz }));
-                const hour = now.getHours();
-                const greeting = getGreeting(hour);
-                greetingDiv.textContent = greeting;
-                clockDiv.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' (' + tz + ')';
-                // Update background
-                backgroundDiv.innerHTML = getBackgroundSVG(hour);
+            const tz = timezoneSelect.value;
+            const now = new Date(new Date().toLocaleString('en-US', { timeZone: tz }));
+            const hour = now.getHours();
+            const greeting = getGreeting(hour);
+            greetingDiv.textContent = greeting;
+            clockDiv.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' (' + tz + ')';
+            // Update background
+            backgroundDiv.innerHTML = getBackgroundSVG(hour);
 
-                // Bird chirping sound in the morning (6am-12pm)
-                const birdAudio = document.getElementById('bird-audio');
-                if (hour >= 6 && hour < 12) {
-                        if (!birdAudioPlayed || lastHour === null || hour !== lastHour) {
-                                birdAudio.currentTime = 0;
-                                birdAudio.play().catch(()=>{});
-                                birdAudioPlayed = true;
-                        }
-                } else {
-                        birdAudio.pause();
-                        birdAudio.currentTime = 0;
-                        birdAudioPlayed = false;
+            // Bird chirping sound in the morning (6am-12pm), only if enabled
+            const birdAudio = document.getElementById('bird-audio');
+            if (soundEnabled && hour >= 6 && hour < 12) {
+                if (!birdAudioPlayed || lastHour === null || hour !== lastHour) {
+                    birdAudio.currentTime = 0;
+                    birdAudio.play().catch(()=>{});
+                    birdAudioPlayed = true;
                 }
-                lastHour = hour;
+            } else {
+                birdAudio.pause();
+                birdAudio.currentTime = 0;
+                birdAudioPlayed = false;
+            }
+            lastHour = hour;
         }
 
         // Populate timezone select
@@ -187,11 +189,18 @@
         const clockDiv = document.getElementById('clock');
         const timezoneSelect = document.getElementById('timezone-select');
         const backgroundDiv = document.getElementById('background');
+        const startSoundBtn = document.getElementById('start-sound');
 
         populateTimezones();
         updateGreetingAndClock();
         setInterval(updateGreetingAndClock, 1000);
         timezoneSelect.addEventListener('change', updateGreetingAndClock);
+
+        startSoundBtn.addEventListener('click', function() {
+            soundEnabled = true;
+            startSoundBtn.style.display = 'none';
+            updateGreetingAndClock();
+        });
         </script>
 
 </body>
