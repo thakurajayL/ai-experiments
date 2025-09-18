@@ -3,8 +3,22 @@
 This folder contains my coding experiments for creative and interactive web projects.
 
 
+
 ## Experiment 1: Greeting Clock
 The first experiment is an interactive greeting clock HTML file that shows a dynamic greeting and background based on the time and timezone.
+
+**Specification used to generate this clock:**
+
+**Specification:**
+
+- Show a screen with a greeting message: "Good morning", "Good afternoon", or "Good evening" depending on the time.
+- Display a small digital clock and a timezone dropdown next to each other, center aligned.
+- If someone changes the timezone, update the greeting and clock based on the selected timezone.
+- The background image should change depending on the time of day:
+	- Morning: sun/landscape (with birds)
+	- Afternoon: sun/sky
+	- Evening: moon/stars
+- Play a bird chirping sound in the morning (6am–12pm) based on the selected timezone.
 
 The final HTML file has been moved to the top-level `docs` folder for GitHub Pages hosting.
 
