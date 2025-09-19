@@ -18,7 +18,6 @@ The first experiment is an interactive greeting clock HTML file that shows a dyn
 	- Morning: sun/landscape (with birds)
 	- Afternoon: sun/sky
 	- Evening: moon/stars
-- Play a bird chirping sound in the morning (6am–12pm) based on the selected timezone. Due to browser autoplay restrictions, the user must click a "Start with Sound" button to enable the sound.
 
 The final HTML file has been moved to the top-level `docs` folder for GitHub Pages hosting.
 
