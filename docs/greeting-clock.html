@@ -66,6 +66,9 @@
             <select class="timezone-select" id="timezone-select"></select>
             <div class="clock" id="clock"></div>
         </div>
+        <div id="joke-container">
+          <!-- Joke will be displayed here -->
+        </div>
         
         <script>
         function getGreeting(hour) {
@@ -173,6 +176,24 @@
         updateGreetingAndClock();
         setInterval(updateGreetingAndClock, 1000);
         timezoneSelect.addEventListener('change', updateGreetingAndClock);
+
+        // Function to fetch a random joke from an API
+        async function getRandomJoke() {
+          const response = await fetch('https://official-joke-api.appspot.com/random_joke');
+          const data = await response.json();
+          return data.get('joke');
+        }
+
+        // Function to display the joke in the joke-container div
+        function showJoke() {
+          const jokeContainer = document.getElementById('joke-container');
+          getRandomJoke().then(joke => {
+            jokeContainer.innerText = joke;
+          });
+        }
+
+        // Call the showJoke function when the page loads
+        window.onload = showJoke;
         </script>
 
 </body>
