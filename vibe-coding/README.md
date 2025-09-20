@@ -18,7 +18,7 @@ The first experiment is an interactive greeting clock HTML file that shows a dyn
 	- Morning: sun/landscape (with birds)
 	- Afternoon: sun/sky
 	- Evening: moon/stars
-
+- Requirement: The AI should be able to generate jokes.
 The final HTML file has been moved to the top-level `docs` folder for GitHub Pages hosting.
 
 👉 **View the live HTML file here:**
